@@ -1,18 +1,47 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"postgr/feature1"
-	"postgr/feature2"
 	"postgr/feature_postgres/simple_connection"
+	"postgr/feature_postgres/simple_sql"
+	"time"
 )
 
 func main() {
-	fmt.Println("Hello git hubby")
 
-	feature1.Feature1()
-	feature2.Feature2()
+	ctx := context.Background()
 
-	simple_connection.CheckConnection()
+	conn, err := simple_connection.CreateConnection(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := simple_sql.CreateTable(ctx, conn); err != nil {
+		panic(err)
+	}
+
+	tasks, err := simple_sql.SelectRows(ctx, conn)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, task := range tasks {
+		if task.ID == 3 {
+			task.Title = "Искупаться в бассейне"
+			task.Description = "Не намочив трусы!"
+			task.Completed = true
+			now := time.Now()
+			task.CompletedAt = &now
+
+			if err := simple_sql.UpdateTask(ctx, conn, task); err != nil {
+				panic(err)
+			}
+
+			break
+		}
+	}
+
+	fmt.Println("УСПЕХ !")
 
 }
