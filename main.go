@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"postgr/feature_postgres/simple_connection"
-	"postgr/feature_postgres/simple_connection/simple_sql"
+	"postgr/feature_postgres/simple_sql"
 	"time"
 )
 
@@ -20,25 +20,6 @@ func main() {
 	if err := simple_sql.CreateTable(ctx, conn); err != nil {
 		panic(err)
 	}
-
-	// if err := simple_sql.InsertRow(
-	// 	ctx,
-	// 	conn,
-	// 	"Уважать кокаколу",
-	// 	"Это надо делать всегда",
-	// 	false,
-	// 	time.Now(),
-	// ); err != nil {
-	// 	panic(err)
-	// }
-
-	// if err := simple_sql.UpdateRow(ctx, conn); err != nil {
-	// 	panic(err)
-	// }
-
-	// if err := simple_sql.DeleteRow(ctx, conn); err != nil {
-	// 	panic(err)
-	// }
 
 	tasks, err := simple_sql.SelectRows(ctx, conn)
 	if err != nil {
